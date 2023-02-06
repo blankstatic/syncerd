@@ -1,4 +1,4 @@
-# Syncer
+# syncerd
 
 File synchronization tool
 
