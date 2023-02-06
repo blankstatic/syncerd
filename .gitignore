@@ -1,0 +1,10 @@
+cover.html
+cover.out
+TODO.txt
+tmp.py
+log.*
+syncerd
+src/
+dst/
+tmp/
+.DS_Store
