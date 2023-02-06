@@ -24,4 +24,4 @@ File synchronization tool
     log level
 ```
 
-![](https://gitlab.rebrainme.com/tomshin_d_e_at_ya_ru/syncer/-/raw/main/assets/demo.gif)
+![](https://github.com/blankstatic/syncerd/blob/master/assets/demo.gif)
