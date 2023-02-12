@@ -3,8 +3,8 @@ package syncd
 import (
 	"context"
 	"path/filepath"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
 	"testing"
 	"time"
 )

@@ -8,9 +8,9 @@ import (
 	"os"
 	"os/signal"
 	"sync"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
-	"syncer/pkg/syncd"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
+	"syncer/internal/syncd"
 	"syscall"
 	"time"
 )

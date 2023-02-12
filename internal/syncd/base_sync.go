@@ -3,9 +3,9 @@ package syncd
 import (
 	"context"
 	"sync"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/lck"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/lck"
+	"syncer/internal/logging"
 	"time"
 )
 

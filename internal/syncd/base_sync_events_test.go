@@ -4,8 +4,8 @@ import (
 	"context"
 	"path/filepath"
 	"reflect"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
 	"testing"
 	"time"
 

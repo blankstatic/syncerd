@@ -3,7 +3,7 @@ package syncd
 import (
 	"fmt"
 	"path/filepath"
-	"syncer/pkg/fsutils"
+	"syncer/internal/fsutils"
 	"testing"
 )
 

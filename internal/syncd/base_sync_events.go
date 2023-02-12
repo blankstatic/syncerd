@@ -5,8 +5,8 @@ import (
 	"log"
 	"strings"
 	"sync"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
 
 	"github.com/fsnotify/fsnotify"
 )
