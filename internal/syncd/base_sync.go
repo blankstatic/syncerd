@@ -84,9 +84,8 @@ func (bs *BaseSync) Cleanup() {
 
 func (bs *BaseSync) Startup() {
 	if !bs.options.Force {
-		isLocked, lockFile := lck.IsLocked()
-		if isLocked {
-			logging.Log.Fatalf("app is locked by %s", lockFile)
+		if lck.IsLocked() {
+			logging.Log.Fatalf("app is locked by %s", lck.GetLockFilename())
 		}
 		logging.Log.Info("sync startup")
 	}

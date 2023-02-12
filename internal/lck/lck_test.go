@@ -25,17 +25,15 @@ func TestLockCycle(t *testing.T) {
 		t.Fatalf("unexpected lock error: %v", err)
 	}
 
-	lckd, lockFile := IsLocked()
-	if !lckd {
-		t.Fatalf("lock '%s' failed", lockFile)
+	if !IsLocked() {
+		t.Fatalf("lock '%s' failed", GetLockFilename())
 	}
 
 	if err := Unlock(); err != nil {
 		t.Fatalf("unexpected unlock error: %v", err)
 	}
 
-	lckd, lockFile = IsLocked()
-	if lckd {
-		t.Fatalf("unlock '%s' failed", lockFile)
+	if IsLocked() {
+		t.Fatalf("unlock '%s' failed", GetLockFilename())
 	}
 }

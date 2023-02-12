@@ -14,14 +14,10 @@ var GetLockFilename = func() string {
 	return lockSrc + filepath.Base(os.Args[0]) + lockSuffix
 }
 
-func IsLocked() (bool, string) {
+func IsLocked() bool {
 	lck := GetLockFilename()
 	_, err := os.Stat(lck)
-	if err == nil {
-		return true, lck
-	}
-	Lock()
-	return false, lck
+	return err == nil
 }
 
 func Lock() error {
