@@ -7,6 +7,10 @@ import (
 )
 
 func TestLockCycle(t *testing.T) {
+	defer func(fn func() string) {
+		GetLockFilename = fn
+	}(GetLockFilename)
+
 	origLockFile := GetLockFilename()
 	if !strings.Contains(origLockFile, lockSrc) && !strings.HasSuffix(origLockFile, lockSuffix) {
 		t.Fatalf("lock filename has wrong value %s", origLockFile)
