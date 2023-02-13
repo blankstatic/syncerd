@@ -8,3 +8,4 @@ src/
 dst/
 tmp/
 .DS_Store
+.idea
