@@ -7,10 +7,9 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"sync"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
-	"syncer/pkg/syncd"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
+	"syncer/internal/syncd"
 	"syscall"
 	"time"
 )
@@ -19,6 +18,12 @@ var TerminationSignals = []os.Signal{
 	syscall.SIGINT,
 	syscall.SIGTERM,
 }
+
+type syncer interface {
+	StartSyncLoop()
+}
+
+var bs syncer
 
 type Cfg struct {
 	src, dst         string
@@ -77,24 +82,17 @@ func run() {
 	signalTermination := make(chan os.Signal, 1)
 	signal.Notify(signalTermination, TerminationSignals...)
 
-	var wg sync.WaitGroup
-
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		s := <-signalTermination
 		cancel()
 		logging.Log.WithError(errors.New(s.String())).Info("app terminating")
 	}()
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		bs := syncd.NewBaseSync(ctx, cfg.src, cfg.dst, cfg.force, cfg.fullSyncInterval)
-		syncd.SyncLoop(bs)
-	}()
-
-	wg.Wait()
+	bs = syncd.NewBaseSync(ctx, cfg.src, cfg.dst, syncd.Options{
+		Force:    cfg.force,
+		Interval: cfg.fullSyncInterval,
+	})
+	bs.StartSyncLoop()
 }
 
 func main() {

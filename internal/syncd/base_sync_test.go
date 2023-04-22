@@ -3,8 +3,8 @@ package syncd
 import (
 	"context"
 	"path/filepath"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/logging"
 	"testing"
 	"time"
 )
@@ -28,7 +28,7 @@ func TestBaseSync(t *testing.T) {
 		t.Fatalf("create dir '%s' error %v", dst, err)
 	}
 
-	bs := NewBaseSync(ctx, src, dst, true, time.Minute*1)
+	bs := NewBaseSync(ctx, src, dst, Options{Force: true, Interval: time.Minute * 1})
 	func() {
 		<-time.After(time.Millisecond * 10)
 		cancel()

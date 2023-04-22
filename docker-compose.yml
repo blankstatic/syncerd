@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+  syncerd:
+    container_name: syncerd
+    restart: unless-stopped
+    build: .
+    volumes:
+      - ./tmp/src:/var/src
+      - ./tmp/dst:/var/dst

@@ -3,13 +3,18 @@ package syncd
 import (
 	"context"
 	"sync"
-	"syncer/pkg/fsutils"
-	"syncer/pkg/lck"
-	"syncer/pkg/logging"
+	"syncer/internal/fsutils"
+	"syncer/internal/lck"
+	"syncer/internal/logging"
 	"time"
 )
 
 const FullSyncInterval = 30 * time.Second
+
+type Options struct {
+	Force    bool
+	Interval time.Duration
+}
 
 type BaseSync struct {
 	sync.Mutex
@@ -21,16 +26,21 @@ type BaseSync struct {
 	srcData       fsutils.MD5Files
 	dstData       fsutils.MD5Files
 	watcher       *SyncWatcher
-	force         bool
-	interval      time.Duration
+	options       Options
 }
 
-func NewBaseSync(ctx context.Context, src, dst string, force bool, interval time.Duration) Syncer {
-	return &BaseSync{ctx: ctx, src: src, dst: dst, force: force, interval: interval}
+func NewBaseSync(ctx context.Context, src, dst string, options Options) *BaseSync {
+	return &BaseSync{ctx: ctx, src: src, dst: dst, options: options}
+}
+
+func (bs *BaseSync) StartSyncLoop() {
+	defer bs.Cleanup()
+	bs.Startup()
+	bs.RunSyncLoop()
 }
 
 func (bs *BaseSync) RunSyncLoop() {
-	fullSyncTicker := time.NewTicker(bs.interval)
+	fullSyncTicker := time.NewTicker(bs.options.Interval)
 	defer fullSyncTicker.Stop()
 
 	logging.Log.Info("sync start")
@@ -54,7 +64,7 @@ syncLoop:
 			break syncLoop
 		case <-fullSyncTicker.C:
 			bs.watcher.Disable()
-			logging.Log.Infof("[%v] sync...", bs.interval)
+			logging.Log.Infof("[%v] sync...", bs.options.Interval)
 			bs.fillSyncMap()
 			bs.fullSync()
 			bs.watcher.Enable()
@@ -66,17 +76,16 @@ syncLoop:
 }
 
 func (bs *BaseSync) Cleanup() {
-	if !bs.force {
+	if !bs.options.Force {
 		lck.Unlock()
 		logging.Log.Info("sync cleanup")
 	}
 }
 
 func (bs *BaseSync) Startup() {
-	if !bs.force {
-		isLocked, lockFile := lck.IsLocked()
-		if isLocked {
-			logging.Log.Fatalf("app is locked by %s", lockFile)
+	if !bs.options.Force {
+		if lck.IsLocked() {
+			logging.Log.Fatalf("app is locked by %s", lck.GetLockFilename())
 		}
 		logging.Log.Info("sync startup")
 	}
